@@ -16,29 +16,52 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
-@Entity //Anotação informa ao spring que classe trata-se de uma entidade/model ou seja, tera os atributos para a nossa tabela
-@Table(name = "tb_postagem") //Anotação informa ao spring que classe sera uma table, o parenteses da o nome
+//@Entity anotação informa que se trata de uma classe entidade, ou seja que formará a tabela no banco de dados
+//@Table nomeia a tabela
+	
+@Entity 
+@Table(name = "tb_postagem") 
 public class Postagem {
 	
+	//@Id anotação para informar que trata-se de uma primary key
+	//GeneratedValue informa que sera valor de auto incremento
+	//(strategy = GenerationType.IDENTITY) informa tipo de auto-incremento ex: numeros
 	
-	@Id //Anotação informa ao spring que atributo sera a chave primaria
-	@GeneratedValue(strategy = GenerationType.IDENTITY) //Anotação informa que sera uma valor de auto incremento parenteses informa que estrategia sera de sequencia numerica
-	private long id;                                    
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	private long id; 
 	
-	@NotNull(message = "O atributo título é obrgatorio!") // Anotação informa que não pode ser valor um valor nulo, parenteses informa mensagem caso não seja dados um valor
-	@Size(min=5, max=100, message="O atributo titulo deve conter no minimo 5 e no maximo 100 caracteres") //Anotação informa a quantidade minima e maxima de caracteres
+	//@NotNull informa aos spring que não pode ser um valor nulo
+	//@Size informa a quantidade minima e/ou maxima de caracteres.
+	
+	@NotNull(message = "O atributo título é obrigatório!") 
+	@Size(min=5, max=100, message="O atributo titulo deve conter no minimo 5 e no maximo 100 caracteres")
 	private String titulo;
 	
-	@NotNull(message = "O atributo título é obrigatório!")// Anotação informa que não pode ser um valor nulo e apresenta a menssagem caso esteja nulo
-	@Size(min=10, max=1000, message="O atributo titulo deve conter no minimo 10 e no maximo 1000 caracteres")//Anotação informa a quantidade minima e maxima de caracteres
+	//@NotNull informa aos spring que não pode ser um valor nulo
+	//@Size informa a quantidade minima e/ou maxima de caracteres.
+	
+	@NotNull(message = "O atributo título é obrigatório!")
+	@Size(min=10, max=1000, message="O atributo titulo deve conter no minimo 10 e no maximo 1000 caracteres")
 	private String texto;
 	
-	@Temporal(TemporalType.TIMESTAMP) //Anotação informa que sera do tipo data ou data e hora do sistema (Timestamp)
-	private Date data = new java.sql.Date(System.currentTimeMillis());// System.currentTimeMillis()->insere os milissegundos na hora
+	//@Temporal Anotação informa que sera do tipo data ou data e hora do sistema (Timestamp)
+	// System.currentTimeMillis()->insere os milissegundos na hora
+	
+	@Temporal(TemporalType.TIMESTAMP) 
+	private Date data = new java.sql.Date(System.currentTimeMillis());
+	
+	//@ManyToOne anotação informa que sera feito a relação entre tabelas de muitos para um
+	//Ex muitos produtos para uma marca
+	//@JsonIgnoreProperties anotação evita looping infinito
 	
 	@ManyToOne
 	@JsonIgnoreProperties("postagem")
 	private Tema tema;
+	
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
 	
 	//Metodos Get e Set
 	
@@ -71,6 +94,12 @@ public class Postagem {
 	}
 	public void setTema(Tema tema) {
 		this.tema = tema;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 
